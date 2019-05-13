@@ -16,7 +16,9 @@ const db = config.get('mongoURI');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(db);
+    await mongoose.connect(db, {
+      useNewUrlParser: true,
+    });
     console.log(chalk.green.inverse('MongoDB Connected...'));
   } catch (err) {
     console.error(err.messsage);
