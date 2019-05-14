@@ -1,13 +1,19 @@
 const express = require('express');
 
 const router = express.Router();
+// validator middlware
 const { check, validationResult } = require('express-validator/check');
+//
+const User = require('../../models/User');
 
 // @route     POST api/users
 // @desc      Register User
 // @access    Public
 router.post(
   '/',
+  // can add another param to post
+  // First:
+  // invoking validator / check middleware
   [
     check('name', 'Name is required')
       .not()
@@ -18,13 +24,30 @@ router.post(
       'Please enter a password with 6 or more characters'
     ).isLength({ min: 6 }),
   ],
-
-  (req, res) => {
+  // using async/await
+  async (req, res) => {
     const errors = validationResult(req);
+    // error catch
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    res.send('User Route');
+
+    // this pulls what I want out of req.body
+    const { name, email, password } = req.body;
+
+    try {
+      // See if user exists
+
+      // Get users gravatar
+
+      // Encrypt password
+
+      // Return jsonwebtoken
+      res.send('User Route');
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
   }
 );
 
