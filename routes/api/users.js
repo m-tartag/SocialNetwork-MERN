@@ -1,9 +1,12 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator/check');
-const gravatar = require('gravatar');
-const bcrypt = require('bcryptjs');
 
 const router = express.Router();
+const gravatar = require('gravatar');
+const jwt = require('jsonwebtoken');
+const config = require('config');
+const bcrypt = require('bcryptjs');
+const { check, validationResult } = require('express-validator/check');
+
 const User = require('../../models/User');
 
 // @route     POST api/users
@@ -17,11 +20,10 @@ router.post(
     check('name', 'Name is required')
       .not()
       .isEmpty(),
-    check('email', 'Please include a valid email').isEmail(),
-    check(
-      'password',
-      'Please enter a password with 6 or more characters'
-    ).isLength({ min: 6 }),
+    check('email', 'Invalid E-mail').isEmail(),
+    check('password', 'Password must contain atleast (6) characters').isLength({
+      min: 6,
+    }),
   ],
   // Use Async/Await here - Important
   async (req, res) => {
@@ -40,7 +42,6 @@ router.post(
       let user = await User.findOne({ email });
       if (user) {
         res.status(400).json({ errors: [{ msg: 'User already exists' }] });
-        console.log('xxxx', user);
       }
 
       // Gravatar middleware
@@ -71,7 +72,15 @@ router.post(
       // ***************************
       await user.save();
 
-      // Return jsonwebtoken
+      // Now Lastly Return {jsonwebtoken} to User
+
+      const payload = {
+        user: {
+          id: user.id,
+        },
+      };
+
+      jwt.sign(payload, config.get(jwtToken));
 
       res.send('User Route');
     } catch (err) {

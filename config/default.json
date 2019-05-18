@@ -1,3 +1,4 @@
 {
-  "mongoURI": "mongodb+srv://admin:adminadminadmin@sandbox-alpha-l3wp7.mongodb.net/test?retryWrites=true"
+  "mongoURI": "mongodb+srv://admin:adminadminadmin@sandbox-alpha-l3wp7.mongodb.net/test?retryWrites=true",
+  "jwtSecret": "mytoken"
 }
