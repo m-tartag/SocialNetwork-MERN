@@ -31,15 +31,14 @@ router.post(
     }
 
     // this pulls what I want out of req.body
-    // const { name, email, password } = req.body;
-    console.log(req.body);
+    const { name, email, password } = req.body;
 
     try {
-      User.create({
-        name: req.body.name,
-        email: req.body.email,
-        password: req.body.password,
-      }).then(user => res.json(user));
+      const user = await User.findOne({ email });
+      if (user) {
+        res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+      }
+
       // See if user exists
 
       // Get users gravatar
@@ -47,6 +46,13 @@ router.post(
       // Encrypt password
 
       // Return jsonwebtoken
+
+      User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+      }).then(data => res.json(data));
+
       res.send('User Route');
     } catch (err) {
       console.error(err.message);
