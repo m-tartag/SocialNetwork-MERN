@@ -1,9 +1,7 @@
 const express = require('express');
+const { check, validationResult } = require('express-validator/check');
 
 const router = express.Router();
-// validator middlware
-const { check, validationResult } = require('express-validator/check');
-//
 const User = require('../../models/User');
 
 // @route     POST api/users
@@ -33,9 +31,15 @@ router.post(
     }
 
     // this pulls what I want out of req.body
-    const { name, email, password } = req.body;
+    // const { name, email, password } = req.body;
+    console.log(req.body);
 
     try {
+      User.create({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+      }).then(user => res.json(user));
       // See if user exists
 
       // Get users gravatar
