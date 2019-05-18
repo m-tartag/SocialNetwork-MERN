@@ -48,7 +48,7 @@ router.post(
       const avatar = gravatar.url(email, {
         s: '200',
         r: 'pg',
-        d: 'mm',
+        d: 'mm'
       });
 
       // This creates a new instance of the user.. it doesnt SAVE IT YET
@@ -73,6 +73,7 @@ router.post(
       await user.save();
 
       // Now Lastly Return {jsonwebtoken} to User
+      // ========================================
 
       const payload = {
         user: {
@@ -80,9 +81,17 @@ router.post(
         },
       };
 
-      jwt.sign(payload, config.get(jwtToken));
-
-      res.send('User Route');
+      jwt.sign(
+        payload,
+        config.get('jwtToken'),
+        {
+          expiresIn: 360000,
+        },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
