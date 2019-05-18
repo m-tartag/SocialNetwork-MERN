@@ -48,7 +48,7 @@ router.post(
       const avatar = gravatar.url(email, {
         s: '200',
         r: 'pg',
-        d: 'mm'
+        d: 'mm',
       });
 
       // This creates a new instance of the user.. it doesnt SAVE IT YET
